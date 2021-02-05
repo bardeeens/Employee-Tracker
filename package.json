@@ -1,0 +1,22 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "keep track of your employees with precision and ease",
+  "main": "organizationDB.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bardeeens/Employee-Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bardeeens/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/bardeeens/Employee-Tracker#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
