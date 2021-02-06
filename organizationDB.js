@@ -49,7 +49,7 @@ function init(){
               allEmployees(init);
               break;
           case "View all Employees by Department":
-              employeesByDept();
+              employeesByDept(init);
               break;
           case "View all Employees by Manager":
               employeesByManager();
@@ -74,7 +74,7 @@ function init(){
 );
 }
 let allEmployees = (cb) => {
-  connection.query('SELECT * FROM employee', function (error, results, fields) {
+  connection.query('SELECT * FROM employee', function (error, results) {
     if (error) throw error;
     console.table(results);
     cb();
@@ -82,15 +82,14 @@ let allEmployees = (cb) => {
   
 } 
 
-let employeesByDept = () => {
-  connection.query('SELECT * FROM department', function (error, results, fields) {
+let employeesByDept = (cb) => {
+  connection.query('SELECT * FROM department', function (error, results) {
     if (error) throw error;
     let deptArray = []
     for (let i = 0; i < results.length; i++) {
       deptArray.push(results[i].name)
       
     }
-    console.log(deptArray);
     inquirer
     .prompt([
         {
@@ -101,32 +100,43 @@ let employeesByDept = () => {
           },
     ])
     .then((response) => {
-      console.log(response.menu);
-      if (response.menu === "Front of House"){
-        displayFront(init);
-      }  
-      else {
-        displayBack(init);
+      // console.log(deptArray.length);
+      for (let i = 0; i < deptArray.length; i++) {
+        if (response.menu === deptArray[i]){
+          connection.query(`select first_name, last_name from employee JOIN role on role_id = role.id JOIN department on role.department_id = department.id WHERE department.id =${i+1};`, function (error, results) {
+            if (error) throw error;
+            console.table(results);
+            cb();
+          });
+         }
+        
       }
     })
   });
  
 }
 let employeesByManager = () => {
-  connection.query('SELECT * FROM employee', function (error, results, fields) {
+  connection.query('select first_name, last_name from employee where role_id = 1', function (error, results, fields) {
     if (error) throw error;
+    let managerArray = []
+    for (let i = 0; i < results.length; i++) {
+      let manager = (results[i].first_name + " " + results[i].last_name)
+      managerArray.push(manager)
+      console.log(managerArray);
+      
+    }
     inquirer
     .prompt([
         {
             type: 'list',
             message: `Which manager would you like to view the employees of?`,
             name: 'menu',
-            choices: ["Derek Bardini", "Peter Ives"]
+            choices: managerArray
           },
     ])
     .then((response) => {
       console.log(response.menu);
-      if (response.menu === "Derek Bardini"){
+      if (response.menu === managerArray[0]){
         displayDerekEmployees(init);
       }  
       else {
@@ -146,7 +156,7 @@ let displayFront = (cb) => {
   connection.query(`select first_name, last_name from employee
 JOIN role on role_id = role.id
 JOIN department on role.department_id = department.id
-WHERE department.id =2;`, function (error, results, fields) {
+WHERE department.id =1;`, function (error, results, fields) {
     if (error) throw error;
     console.table(results);
     cb();
@@ -157,7 +167,7 @@ let displayBack = (cb) => {
   connection.query(`select first_name, last_name from employee
 JOIN role on role_id = role.id
 JOIN department on role.department_id = department.id
-WHERE department.id =1;`, function (error, results, fields) {
+WHERE department.id =2;`, function (error, results, fields) {
     if (error) throw error;
     console.table(results);
     cb();
@@ -199,3 +209,4 @@ let displayPeterEmployees = (cb) => {
 module.exports = {
   allEmployees
 }
+

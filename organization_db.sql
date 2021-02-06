@@ -18,6 +18,8 @@ JOIN role on role_id = role.id
 JOIN department on role.department_id = department.id
 WHERE department.id =2;
 
+select first_name, last_name from employee
+WHERE manager_id = 8;
 
 select id from department;
 
@@ -57,8 +59,10 @@ manager_id INTEGER
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Peter', 'Ives', 5, 1);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Tyler', 'Doyle', 6, 8);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Roger', 'Simpson', 7, 8);
- 
+ INSERT INTO department (name) values ('Security');
  select * from department;
  select * from role;
  select * from employee;
+ 
+
 
