@@ -85,13 +85,19 @@ let allEmployees = (cb) => {
 let employeesByDept = () => {
   connection.query('SELECT * FROM department', function (error, results, fields) {
     if (error) throw error;
+    let deptArray = []
+    for (let i = 0; i < results.length; i++) {
+      deptArray.push(results[i].name)
+      
+    }
+    console.log(deptArray);
     inquirer
     .prompt([
         {
             type: 'list',
             message: 'Which employees would you like to view?',
-            name: 'menu',
-            choices: [results[0].name, results[1].name]
+            name: 'menu',        
+            choices: deptArray
           },
     ])
     .then((response) => {
