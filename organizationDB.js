@@ -1,36 +1,20 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const { inherits } = require('util');
-// const { init } = require('./Assets/questions');
-const { deepQuestions } = require("./Assets/deepQuestions.js")
 
-
-
-// Connect to the ice_creamDB database using a localhost connection
 const connection = mysql.createConnection({
   host: 'localhost',
-
-  // Your port, if not 3306
   port: 3306,
-
-  // Your MySQL username
   user: 'root',
-
-  // Your MySQL password (leave blank for class demonstration purposes; fill in later)
   password: 'root',
-
-  // Name of database
   database: 'seed',
 });
 
 connection.connect((err) => {
   if (err) throw err;
-  // x = require('connectionuser')(connection)
   init();
 
 });
 function init() {
-
   inquirer
     .prompt([
       {
@@ -43,12 +27,11 @@ function init() {
           "Update Employee Role", "Update Employee Manager"]
       },
     ])
-    // call functions based on response
     .then((response) => {
       switch (response.menu) {
         case "View all Employees":
           allEmployees(init);
-          // still needs more info but good
+          // still manager and department
           break;
         case "View all Employees by Department":
           employeesByDept(init);
@@ -59,15 +42,17 @@ function init() {
           break;
         case "Add Employee":
           addEmployee(init);
+          // complete
           break;
         case "Remove Employee":
+          // complete
           removeEmployee(init);
           break;
         case "Add New Role":
           console.log("we are hiring");
           break;
         case "Add New Department":
-          console.log("new department");
+          addDept(init);
           break;
         case "Update Employee Role":
           console.log("promotion");
@@ -83,14 +68,13 @@ function init() {
     );
 }
 let allEmployees = (cb) => {
-  connection.query('SELECT first_name, last_name FROM employee', function (error, results) {
+  connection.query('select first_name, last_name, title, salary from employee JOIN role on role_id = role.id;', function (error, results) {
     if (error) throw error;
     console.table(results);
     cb();
   });
 
 }
-
 let employeesByDept = (cb) => {
   connection.query('SELECT * FROM department', function (error, results) {
     if (error) throw error;
@@ -267,6 +251,24 @@ let removeEmployee = (cb) => {
   })
       })
   })
+}
+let addDept = (cb) => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: "What is the name of the new department?",
+        name: "dept"
+      }
+    ])
+    .then((response) => {
+      console.log(response.dept);
+      connection.query(`INSERT INTO department (name) values ('${response.dept}');`, function (error) {
+    if (error) throw error;
+    console.log(`${response.dept} has been added as a new department!`);
+    cb();
+  })
+    })
 }
 
 
