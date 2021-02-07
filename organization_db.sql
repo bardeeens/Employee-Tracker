@@ -1,5 +1,5 @@
 drop database if exists seed;
-CREATE DATABASE seed;
+CREATE DATABASE if not exists seed;
 USE seed;
 
 CREATE TABLE department(
@@ -13,25 +13,7 @@ title VARCHAR(30) NOT NULL,
 salary DECIMAL (8,2) NOT NULL,
 department_id INTEGER NOT NULL
 );
-select first_name, last_name from employee
-JOIN role on role_id = role.id
-JOIN department on role.department_id = department.id
-WHERE department.id =2;
 
-select first_name, last_name from employee
-WHERE manager_id = 8;
-
-select id from department;
-
-select * from employee;
-
-
-
-inner join role
-on employee.role_id = role.id
-inner join role on depart
-
-inner join employee ON role.title = employee.role_id;
 CREATE TABLE employee(
 id INTEGER auto_increment primary key,
 first_name VARCHAR(30) NOT NULL,
@@ -56,13 +38,39 @@ manager_id INTEGER
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Lauren', 'Kern', 2, 1);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Danae', 'Diem', 3, 1);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Hiro', 'Nataki', 4, 1);
- INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Peter', 'Ives', 5, 1);
+ INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Peter', 'Ives', 1, 1);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Tyler', 'Doyle', 6, 8);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Roger', 'Simpson', 7, 8);
- INSERT INTO department (name) values ('Security');
+ INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Bobby', 'Wasabi', 7, 8);
+ 
+ delete from employee Where id=10
+ 
  select * from department;
- select * from role;
- select * from employee;
+ select title from role;
+ select * from employee
+ where first_name= 'bobby';
+ 
+ select first_name, last_name from employee
+JOIN role on role_id = role.id
+JOIN department on role.department_id = department.id
+WHERE department.id =2;
+
+select first_name, last_name, id from employee
+WHERE role_id = 1;
+
+select id from department;
+
+select * from employee;
+
+inner join role
+on employee.role_id = role.id
+inner join role on depart
+
+inner join employee ON role.title = employee.role_id;
+
+
+
+
  
 
 
