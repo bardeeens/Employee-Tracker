@@ -61,7 +61,7 @@ function init() {
           addEmployee(init);
           break;
         case "Remove Employee":
-          removeEmployee();
+          removeEmployee(init);
           break;
         case "Add New Role":
           console.log("we are hiring");
@@ -235,8 +235,38 @@ let addEmployee = (cb) => {
   })
 
 }
-let removeEmployee = () => {
-  console.log("u fired");
+let removeEmployee = (cb) => {
+  connection.query(`select id, first_name, last_name from employee;`, function (error, results) {
+    if (error) throw error;
+    let employeeArray = [];
+    let empIdArray = [];
+    for (let i = 0; i < results.length; i++) {
+      let employee= (results[i].first_name + " " + results[i].last_name)
+      let empID = results[i].id
+      employeeArray.push(employee);
+      empIdArray.push(empID);
+      
+    }
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          message: 'Which employee would you like to remove?',
+          choices: employeeArray,
+          name: 'employee'
+        }
+      ])
+      .then((response)=> {
+        console.log(response.employee);
+        let dex = employeeArray.indexOf(response.employee)
+        console.log();
+        connection.query(`DELETE FROM employee WHERE id=${empIdArray[dex]}`, function (error, results) {
+    if (error) throw error;
+    console.log(`${response.employee} has been fired!`);
+    cb();
+  })
+      })
+  })
 }
 
 
