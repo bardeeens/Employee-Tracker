@@ -43,48 +43,7 @@ manager_id INTEGER
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Roger', 'Simpson', 7, 8);
  INSERT INTO employee (first_name, last_name, role_id, manager_id) values ('Bobby', 'Wasabi', 7, 8);
  
- delete from employee Where id=10
  
- select * from department;
- select title from role;
- select * from employee
- where first_name= 'bobby';
- 
- select first_name, last_name, employee.id from employee
- WHERE role_id=1;
- select title, role.id from role;
- 
-JOIN role on role_id = role.id
-JOIN department on role.department_id = department.id
-WHERE department.id =2;
-
-select first_name, last_name, id from employee
-WHERE role_id = 1;
-
-select id from department;
-
-select * from employee;
-select * from role;
-
-inner join role
-on employee.role_id = role.id;
-inner join role on depart
-
-inner join employee ON role.title = employee.role_id;
- 
-select first_name, last_name, title, salary
-from employee
-JOIN role on role_id = role.id;
-
-select first_name, last_name, title, salary from employee JOIN role on role_id = role.id;
-select title, id from role;
-
-select first_name, last_name, title, salary from employee JOIN role on role_id = role.id
-WHERE manager_id =1;
-
-select first_name, last_name, title, salary from employee 
-JOIN role on role_id = role.id 
-JOIN department on role.department_id = department.id WHERE department.id =1;
 
 
  

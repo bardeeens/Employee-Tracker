@@ -59,8 +59,10 @@ function init() {
           break;
         case "View Employees by Role":
           employeesByRole(init);
+          break;
         case "Update Employee Manager":
-          console.log("new boss");
+          console.log("Coming soon!");
+          init();
           break;
         default:
           break;
@@ -337,8 +339,6 @@ let updateEmpRole = (cb) => {
       employeeArray.push(employee);
       empIdArray.push(empID);
     }
-    console.log(empIdArray);
-    console.log(employeeArray);
     inquirer
     .prompt([
       {
@@ -361,8 +361,6 @@ let updateEmpRole = (cb) => {
           roleArray.push(roletitle);
           roleIDArray.push(roleid)
         }
-        console.log(roleArray);
-        console.log(roleIDArray);
         inquirer
           .prompt([{
             type: 'list',
@@ -430,86 +428,6 @@ let employeesByRole = (cb) => {
     
   })
 }
-
-
-
-let displayFront = (cb) => {
-  connection.query(`select first_name, last_name from employee
-JOIN role on role_id = role.id
-JOIN department on role.department_id = department.id
-WHERE department.id =1;`, function (error, results, fields) {
-    if (error) throw error;
-    console.table(results);
-    cb();
-  })
-}
-
-let displayBack = (cb) => {
-  connection.query(`select first_name, last_name from employee
-JOIN role on role_id = role.id
-JOIN department on role.department_id = department.id
-WHERE department.id =2;`, function (error, results, fields) {
-    if (error) throw error;
-    console.table(results);
-    cb();
-  })
-}
-
-let displayDerekEmployees = (cb) => {
-  connection.query(`select first_name, last_name from employee
-  WHERE manager_id = 1;`, function (error, results, fields) {
-    if (error) throw error;
-    console.table(results);
-    cb();
-  })
-}
-
-let displayPeterEmployees = (cb) => {
-  connection.query(`select first_name, last_name from employee
-  WHERE manager_id = 8;`, function (error, results, fields) {
-    if (error) throw error;
-    console.table(results);
-    cb();
-  })
-}
-
-// .then((response) => {
-//   console.log(response.employee);
-//   let dex = employeeArray.indexOf(response.employee)
-//   connection.query(`select id, first_name, last_name from employee;`, function (error, results) {
-// if (error) throw error;
-// let empIdArray = [];
-
-
-// cb();
-// })
-// })
-
-// 
-
-// connection.query('SELECT * FROM department', function (error, results, fields) {
-//   if (error) throw error;
-//   console.log(results);
-//   connection.end();
-// });
-// for (let i = 0; i < results.length; i++) {
-//   let employee = (results[i].first_name + " " + results[i].last_name)
-//   let empID = results[i].id
-//   employeeArray.push(employee);
-//   empIdArray.push(empID);
-//   if (response.employee === employee){
-//     connection.query(`UPDATE employee SET role_id = ${}, WHERE id=${empIdArray[i]}`, function (error, results) {
-//       if (error) throw error;
-//       console.log(`${response.employee} has been fired!`);
-//       cb();
-//     })
-    
-//   }
-
-// }
-
-
-
 module.exports = {
   allEmployees
 };
