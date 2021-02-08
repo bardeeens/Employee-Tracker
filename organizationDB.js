@@ -21,8 +21,8 @@ function init() {
         type: 'list',
         message: 'What would you like to do?',
         name: 'menu',
-        choices: ["View all Employees", "View all Employees by Department",
-          "View all Employees by Manager", "Add Employee", "Remove Employee",
+        choices: ["View all Employees", "View all Employees by Department", "View Employees by Role",
+          "View Employees by Manager", "Add Employee", "Remove Employee",
           "Add New Role", "Add New Department",
           "Update Employee Role", "Update Employee Manager"]
       },
@@ -37,7 +37,7 @@ function init() {
           employeesByDept(init);
           // basically good, more info
           break;
-        case "View all Employees by Manager":
+        case "View Employees by Manager":
           employeesByManager(init);
           break;
         case "Add Employee":
@@ -57,6 +57,8 @@ function init() {
         case "Update Employee Role":
           updateEmpRole(init);
           break;
+        case "View Employees by Role":
+          employeesByRole(init);
         case "Update Employee Manager":
           console.log("new boss");
           break;
@@ -78,9 +80,11 @@ let allEmployees = (cb) => {
 let employeesByDept = (cb) => {
   connection.query('SELECT * FROM department', function (error, results) {
     if (error) throw error;
-    let deptArray = []
+    let deptArray = [];
+    let deptIdArray = [];
     for (let i = 0; i < results.length; i++) {
       deptArray.push(results[i].name)
+      deptIdArray.push(results[i].id)
 
     }
     inquirer
@@ -93,13 +97,21 @@ let employeesByDept = (cb) => {
         },
       ])
       .then((response) => {
-        // console.log(deptArray.length);
+        let dex = deptArray.indexOf(response.menu)
+
         for (let i = 0; i < deptArray.length; i++) {
           if (response.menu === deptArray[i]) {
-            connection.query(`select first_name, last_name from employee JOIN role on role_id = role.id JOIN department on role.department_id = department.id WHERE department.id =${i + 1};`, function (error, results) {
+            connection.query(`select first_name, last_name, title, salary from employee JOIN role on role_id = role.id JOIN department on role.department_id = department.id WHERE department.id =${deptIdArray[dex]};`, function (error, results) {
               if (error) throw error;
-              console.table(results);
-              cb();
+              if (results.length > 0){
+                console.table(results);
+                cb();
+              }
+              else {
+                console.log(`No one works in the ${response.menu} department!`);
+                cb();
+              }
+              
             });
           }
 
@@ -130,20 +142,21 @@ let employeesByManager = (cb) => {
         },
       ])
       .then((response) => {
-        // console.log(response.menu);
-        for (let i = 0; i < managerArray.length; i++) {
-          if (response.menu === managerArray[i]) {
-
-            connection.query(`select first_name, last_name from employee
-          WHERE manager_id = ${managerIdArray[i]};`, function (error, results) {
-              if (error) throw error;
-              console.table(results)
-              // broken come back later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-              cb();
-            })
-          }
-
-        }
+        let dex = managerArray.indexOf(response.menu)
+        connection.query(`select first_name, last_name, title, salary from employee JOIN role on role_id = role.id
+        WHERE manager_id =${managerIdArray[dex]};`, function (error, results) {
+    if (error) throw error;
+    if (results.length > 0){
+      console.table(results);
+      cb();
+    }
+    else {
+      console.log(`Nobody directly reports to ${response.menu}!`);
+      cb();
+    }
+    
+  })
+        
       })
   });
 }
@@ -376,6 +389,45 @@ let updateEmpRole = (cb) => {
     
      
       
+  })
+}
+let employeesByRole = (cb) => {
+  connection.query(`select title, id from role;`, function (error, results) {
+    if (error) throw error;
+    let roleArray = [];
+    let roleIdArray = [];
+    for (let i = 0; i < results.length; i++) {
+      roleArray.push(results[i].title)
+      roleIdArray.push(results[i].id)
+    }
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          message: "Which position would you like to view?",
+          choices: roleArray,
+          name: 'role'
+        }
+      ])
+      .then((response)=> {
+        let dex = roleArray.indexOf(response.role)
+        connection.query(`select first_name, last_name, title, salary from employee JOIN role on role_id = role.id
+        WHERE role_id =${roleIdArray[dex]};`, function (error, results) {
+    if (error) throw error;
+    if (results.length > 0){
+      console.table(results);
+      cb();
+    }
+    else {
+      console.log(`There is nobody assigned as a ${response.role}!`);
+      cb();
+    }
+    
+    
+  })
+        
+      })
+    
   })
 }
 

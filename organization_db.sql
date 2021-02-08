@@ -76,9 +76,15 @@ select first_name, last_name, title, salary
 from employee
 JOIN role on role_id = role.id;
 
-select * from employee JOIN role on role_id = role.id;
+select first_name, last_name, title, salary from employee JOIN role on role_id = role.id;
+select title, id from role;
 
+select first_name, last_name, title, salary from employee JOIN role on role_id = role.id
+WHERE manager_id =1;
 
+select first_name, last_name, title, salary from employee 
+JOIN role on role_id = role.id 
+JOIN department on role.department_id = department.id WHERE department.id =1;
 
 
  
